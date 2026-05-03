@@ -1,36 +1,11 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import Icon from "@/components/ui/icon";
+import { models } from "@/data/models";
 
 const CAR_IMG = "https://cdn.poehali.dev/projects/1dedfde7-f9bf-4483-9071-fbbd19a5cd26/files/fd4db5ef-a9de-4b71-b4b0-a5a337e0a943.jpg";
 const AERO_IMG = "https://cdn.poehali.dev/projects/1dedfde7-f9bf-4483-9071-fbbd19a5cd26/files/523218b7-5a82-44a7-a17b-371b7daefa2a.jpg";
 const FACTORY_IMG = "https://cdn.poehali.dev/projects/1dedfde7-f9bf-4483-9071-fbbd19a5cd26/files/c722d47d-bea0-4686-ae25-5e5f62c2129e.jpg";
-
-const models = [
-  {
-    name: "Jesko Absolut",
-    power: "1600 л.с.",
-    speed: "330+ км/ч",
-    engine: "5.0L Twin-Turbo V8",
-    desc: "Самый быстрый серийный Koenigsegg в истории. Создан для абсолютного рекорда скорости.",
-    tag: "РЕКОРДСМЕН",
-  },
-  {
-    name: "Regera",
-    power: "1500 л.с.",
-    speed: "400+ км/ч",
-    engine: "5.0L V8 + 3 электро",
-    desc: "Гибридный мегакар с прямым приводом. Инновационная трансмиссия без традиционных передач.",
-    tag: "ГИБРИД",
-  },
-  {
-    name: "CC850",
-    power: "1385 л.с.",
-    speed: "300+ км/ч",
-    engine: "5.0L Twin-Turbo V8",
-    desc: "Дань уважения первому Koenigsegg CC8S. Ручная коробка передач в XXI веке.",
-    tag: "НАСЛЕДИЕ",
-  },
-];
 
 const techFeatures = [
   {
@@ -91,6 +66,7 @@ function AnimSection({ children, className = "" }: { children: React.ReactNode; 
 }
 
 export default function Index() {
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
 
@@ -274,38 +250,51 @@ export default function Index() {
             </div>
           </AnimSection>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {models.map((model, i) => (
               <AnimSection key={model.name}>
                 <div
                   className="group relative bg-kg-card border border-kg-border overflow-hidden cursor-pointer hover:border-kg-orange/50 transition-all duration-500"
-                  style={{ transitionDelay: `${i * 100}ms` }}
+                  style={{ transitionDelay: `${i * 80}ms` }}
+                  onClick={() => navigate(`/model/${model.id}`)}
                 >
-                  <div className="h-1 w-0 group-hover:w-full bg-gradient-to-r from-kg-orange to-kg-amber transition-all duration-700" />
-                  <div className="p-8">
-                    <div className="flex items-center justify-between mb-6">
-                      <span className="text-xs font-bold tracking-[0.25em] text-kg-orange uppercase border border-kg-orange/30 px-3 py-1">
-                        {model.tag}
-                      </span>
-                      <Icon name="ChevronRight" size={20} className="text-kg-border group-hover:text-kg-orange group-hover:translate-x-1 transition-all duration-300" />
-                    </div>
-                    <h3 className="font-bebas text-4xl text-kg-white mb-2 tracking-wide">{model.name}</h3>
-                    <p className="text-xs text-kg-gray uppercase tracking-widest mb-6">{model.engine}</p>
-                    <p className="text-sm text-kg-gray leading-relaxed mb-8">{model.desc}</p>
-                    <div className="grid grid-cols-2 gap-4 pt-6 border-t border-kg-border">
+                  {/* Image */}
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={model.image}
+                      alt={model.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-kg-card via-transparent to-transparent" />
+                    <span className="absolute top-4 left-4 text-xs font-bold tracking-[0.2em] text-kg-orange uppercase border border-kg-orange/40 bg-kg-black/60 backdrop-blur-sm px-3 py-1">
+                      {model.tag}
+                    </span>
+                  </div>
+
+                  <div className="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-kg-orange to-kg-amber transition-all duration-700" />
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-3">
                       <div>
-                        <div className="font-bebas text-3xl text-kg-orange">{model.power}</div>
+                        <h3 className="font-bebas text-3xl text-kg-white tracking-wide leading-none">{model.name}</h3>
+                        <p className="text-xs text-kg-gray uppercase tracking-widest mt-1">{model.engine}</p>
+                      </div>
+                      <Icon name="ArrowUpRight" size={18} className="text-kg-border group-hover:text-kg-orange transition-colors mt-1 flex-shrink-0" />
+                    </div>
+                    <p className="text-sm text-kg-gray leading-relaxed mb-6 line-clamp-2">{model.desc}</p>
+                    <div className="grid grid-cols-2 gap-3 pt-4 border-t border-kg-border">
+                      <div>
+                        <div className="font-bebas text-2xl text-kg-orange">{model.power}</div>
                         <div className="text-xs text-kg-gray uppercase tracking-wider">Мощность</div>
                       </div>
                       <div>
-                        <div className="font-bebas text-3xl text-kg-white">{model.speed}</div>
+                        <div className="font-bebas text-2xl text-kg-white">{model.speed}</div>
                         <div className="text-xs text-kg-gray uppercase tracking-wider">Макс. скорость</div>
                       </div>
                     </div>
                   </div>
                   <div
                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{ background: "radial-gradient(circle at 50% 0%, rgba(255,69,0,0.08) 0%, transparent 70%)" }}
+                    style={{ background: "radial-gradient(circle at 50% 0%, rgba(255,69,0,0.06) 0%, transparent 70%)" }}
                   />
                 </div>
               </AnimSection>
